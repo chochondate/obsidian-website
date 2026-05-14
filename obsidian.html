@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Obsidian — Precision-built technology for a complex world</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:           #05060a;
+  --bg-mid:       #080b12;
+  --bg-card:      #0c1018;
+  --bg-card-h:    #101420;
+  --bg-surface:   #111828;
+  --gold:         #c9a84c;
+  --gold-lt:      #e8c97a;
+  --gold-dk:      #9a7a2e;
+  --gold-glow:    rgba(201,168,76,0.08);
+  --gold-border:  rgba(201,168,76,0.2);
+  --gold-border2: rgba(201,168,76,0.1);
+  --navy:         #0d1b3e;
+  --text-p:       #e4e9f2;
+  --text-s:       #7a8baa;
+  --text-m:       #3a4560;
+  --border:       rgba(255,255,255,0.05);
+  --border-md:    rgba(255,255,255,0.08);
+  --mono:   'DM Mono', monospace;
+  --sans:   'DM Sans', sans-serif;
+  --disp:   'Syne', sans-serif;
+  --r:      12px;
+  --r-sm:   6px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text-p);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── NOISE TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(201,168,76,0.07) 0%, transparent 60%),
+    linear-gradient(rgba(201,168,76,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 72px 72px, 72px 72px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.z1 { position: relative; z-index: 1; }
+
+/* ── WRAPPER ── */
+.wrap {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ══════════════ NAV ══════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 200;
+  background: rgba(5,6,10,0.88);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1140px; margin: 0 auto; padding: 0 2.5rem;
+  height: 68px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 12px;
+  text-decoration: none;
+}
+.logo-mark {
+  width: 34px; height: 34px;
+  background: var(--gold-glow);
+  border: 1px solid var(--gold-border);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+.logo-mark svg { width: 18px; height: 18px; }
+.logo-text {
+  font-family: var(--disp);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-p);
+}
+.logo-text span { color: var(--gold); }
+.nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+  color: var(--text-s); text-decoration: none; text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--gold); }
+.nav-cta {
+  padding: 9px 20px;
+  border: 1px solid var(--gold-border);
+  border-radius: var(--r-sm);
+  color: var(--gold) !important;
+  transition: all 0.2s !important;
+}
+.nav-cta:hover { background: var(--gold-glow) !important; }
+.nav-burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+.nav-burger span { display: block; width: 22px; height: 1px; background: var(--text-s); transition: all 0.3s; }
+.mobile-menu {
+  display: none;
+  position: fixed; top: 68px; left: 0; right: 0;
+  background: rgba(5,6,10,0.97);
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem 2.5rem;
+  z-index: 199;
+  flex-direction: column; gap: 1.2rem;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; color: var(--text-s); text-decoration: none; text-transform: uppercase; }
+.mobile-menu a:hover { color: var(--gold); }
+
+/* ══════════════ HERO ══════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 110px 0 80px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg-orb {
+  position: absolute; bottom: -200px; right: -200px;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(13,27,62,0.6) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 2rem;
+  opacity: 0; animation: fadeUp 0.9s 0.1s ease forwards;
+}
+.hero-eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--gold); }
+.hero h1 {
+  font-family: var(--disp);
+  font-size: clamp(3.2rem, 7vw, 6.5rem);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  margin-bottom: 2rem;
+  opacity: 0; animation: fadeUp 0.9s 0.2s ease forwards;
+}
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--gold-lt) 0%, var(--gold) 50%, var(--gold-dk) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: 1.15rem; color: var(--text-s); max-width: 520px;
+  line-height: 1.85; margin-bottom: 3rem;
+  opacity: 0; animation: fadeUp 0.9s 0.35s ease forwards;
+}
+.hero-actions {
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  opacity: 0; animation: fadeUp 0.9s 0.5s ease forwards;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 15px 30px;
+  background: linear-gradient(135deg, var(--gold-lt), var(--gold));
+  color: #05060a;
+  font-family: var(--mono); font-size: 12px; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; border-radius: var(--r-sm);
+  transition: all 0.2s; border: none; cursor: pointer;
+}
+.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-primary svg { width: 13px; height: 13px; }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 28px;
+  border: 1px solid var(--border-md);
+  color: var(--text-s);
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; border-radius: var(--r-sm);
+  transition: all 0.2s;
+}
+.btn-ghost:hover { border-color: var(--gold-border); color: var(--gold); }
+.hero-stats {
+  display: flex; gap: 3rem; flex-wrap: wrap;
+  margin-top: 5rem; padding-top: 3rem;
+  border-top: 1px solid var(--border);
+  opacity: 0; animation: fadeUp 0.9s 0.65s ease forwards;
+}
+.stat-item { display: flex; flex-direction: column; gap: 4px; }
+.stat-val {
+  font-family: var(--disp); font-size: 2.2rem; font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--gold-lt), var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.stat-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-m); }
+
+/* ══════════════ SECTION HEADER ══════════════ */
+.sec-eyebrow {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 1rem;
+}
+.sec-eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--gold); }
+.sec-title {
+  font-family: var(--disp);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;
+  margin-bottom: 1rem;
+}
+.sec-title em {
+  font-style: normal; color: var(--gold);
+}
+.sec-desc { color: var(--text-s); font-size: 1rem; max-width: 540px; line-height: 1.8; }
+
+/* ══════════════ ABOUT ══════════════ */
+.about { padding: 120px 0; }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+.about-text { }
+.about-body { color: var(--text-s); font-size: 1rem; line-height: 1.9; margin-top: 2rem; }
+.about-body p + p { margin-top: 1.1rem; }
+.pillars {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  margin-top: 2.5rem;
+}
+.pillar {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 1.25rem;
+  transition: border-color 0.25s;
+}
+.pillar:hover { border-color: var(--gold-border2); }
+.pillar-icon {
+  width: 38px; height: 38px;
+  background: var(--gold-glow);
+  border: 1px solid var(--gold-border2);
+  border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 0.75rem;
+  color: var(--gold);
+}
+.pillar-icon svg { width: 18px; height: 18px; }
+.pillar h4 { font-family: var(--disp); font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.pillar p { font-size: 12px; color: var(--text-s); line-height: 1.6; }
+.about-visual {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.about-orb {
+  width: 420px; height: 420px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-border2);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.about-orb::before {
+  content: '';
+  position: absolute; inset: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+}
+.about-orb::after {
+  content: '';
+  position: absolute; inset: 60px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-border2);
+  background: radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%);
+}
+.orb-center {
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: var(--gold-glow);
+  border: 1px solid var(--gold-border);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; z-index: 2;
+}
+.orb-center svg { width: 40px; height: 40px; color: var(--gold); }
+.orb-center span { font-family: var(--disp); font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: 0.08em; }
+.orbit-dot {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0.5;
+}
+.orbit-dot:nth-child(1) { top: -4px; left: 50%; transform: translateX(-50%); animation: orbit 8s linear infinite; }
+.orbit-dot:nth-child(2) { bottom: 30px; right: -4px; animation: orbit 8s linear infinite reverse; opacity: 0.3; }
+.orbit-dot:nth-child(3) { top: 50%; left: -4px; transform: translateY(-50%); animation: orbit 12s linear infinite; opacity: 0.2; }
+@keyframes orbit {
+  0% { opacity: 0.5; }
+  50% { opacity: 0.15; }
+  100% { opacity: 0.5; }
+}
+
+/* ══════════════ SERVICES STRIP ══════════════ */
+.services-strip {
+  padding: 0 0 100px;
+}
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 4rem; }
+.service-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 2rem;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.service-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.service-card:hover { border-color: var(--gold-border2); background: var(--bg-card-h); }
+.service-card:hover::before { opacity: 1; }
+.svc-icon {
+  width: 48px; height: 48px;
+  background: var(--gold-glow); border: 1px solid var(--gold-border2);
+  border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold); margin-bottom: 1.25rem;
+}
+.svc-icon svg { width: 22px; height: 22px; }
+.svc-title { font-family: var(--disp); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+.svc-desc { font-size: 0.875rem; color: var(--text-s); line-height: 1.7; }
+
+/* ══════════════ PRODUCTS ══════════════ */
+.products { padding: 100px 0; background: var(--bg-mid); position: relative; }
+.products::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--gold-border) 50%, transparent 100%);
+}
+.products::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--gold-border) 50%, transparent 100%);
+}
+.products-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap; margin-bottom: 4rem; }
+.products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+.product-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: default;
+}
+.product-card:hover { border-color: var(--gold-border2); transform: translateY(-3px); }
+.product-card.featured { grid-column: span 2; display: grid; grid-template-columns: 1fr 1.2fr; }
+
+/* Product snapshots */
+.prod-visual {
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+  background: #06090f;
+}
+.product-card.featured .prod-visual { height: auto; min-height: 280px; }
+
+/* Sentinel snapshot */
+.snap-s {
+  height: 100%; padding: 18px;
+  font-family: var(--mono); font-size: 9.5px;
+  display: flex; flex-direction: column; gap: 8px;
+  background: #040608;
+}
+.s-bar {
+  display: flex; align-items: center; gap: 6px;
+  background: #080d14; border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 4px; padding: 7px 10px; color: var(--gold);
+}
+.s-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); opacity: 0.7; animation: blink 1.4s step-start infinite; }
+.s-row { display: flex; align-items: center; gap: 7px; padding: 5px 10px; border-radius: 3px; }
+.s-red { background: rgba(226,75,74,0.1); color: #f09595; border-left: 2px solid #E24B4A; }
+.s-amb { background: rgba(186,117,23,0.1); color: #FAC775; border-left: 2px solid #BA7517; }
+.s-grn { background: rgba(99,153,34,0.1); color: #97C459; border-left: 2px solid #639922; }
+.s-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.s-stat { background: #080d14; border: 1px solid rgba(201,168,76,0.06); border-radius: 3px; padding: 6px; text-align: center; }
+.s-stat .v { display: block; font-size: 13px; color: var(--gold); font-weight: 500; }
+.s-stat .l { font-size: 7.5px; color: var(--text-m); }
+
+/* SmartLease snapshot */
+.snap-sl {
+  height: 100%; padding: 16px;
+  font-family: var(--sans); font-size: 9px;
+  display: flex; flex-direction: column; gap: 9px;
+  background: #060408;
+}
+.sl-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 9px; border-bottom: 1px solid rgba(167,139,250,0.1); }
+.sl-brand { font-family: var(--disp); font-size: 11px; color: #a78bfa; font-weight: 700; }
+.sl-nav2 { display: flex; gap: 8px; }
+.sl-nav2 span { font-size: 8px; color: var(--text-m); }
+.sl-nav2 span.a { color: #a78bfa; }
+.sl-metrics { display: flex; gap: 8px; }
+.sl-m { flex: 1; background: #0c0c14; border: 1px solid rgba(167,139,250,0.1); border-radius: 4px; padding: 8px; }
+.sl-m .mv { font-family: var(--mono); font-size: 14px; color: #c4b5fd; font-weight: 500; }
+.sl-m .ml { font-size: 7.5px; color: rgba(167,139,250,0.5); text-transform: uppercase; letter-spacing: 0.08em; }
+.sl-item { background: #0c0c14; border: 1px solid rgba(167,139,250,0.07); border-radius: 4px; padding: 6px 10px; display: flex; justify-content: space-between; align-items: center; }
+.sl-b { padding: 2px 7px; border-radius: 20px; font-size: 7.5px; background: rgba(167,139,250,0.12); color: #c4b5fd; }
+
+/* BASH snapshot */
+.snap-b {
+  height: 100%; padding: 14px;
+  font-family: var(--mono); font-size: 9.5px;
+  display: flex; flex-direction: column; gap: 7px;
+  background: #040608;
+}
+.b-hdr { display: flex; align-items: center; gap: 5px; padding-bottom: 9px; border-bottom: 1px solid rgba(55,138,221,0.1); }
+.b-dot2 { width: 7px; height: 7px; border-radius: 50%; }
+.b-dot2.r { background: #E24B4A; } .b-dot2.y { background: #BA7517; } .b-dot2.g { background: #639922; }
+.b-t { font-size: 8px; color: var(--text-m); margin-left: auto; }
+.b-ln { display: flex; gap: 7px; line-height: 1.5; }
+.b-pr { color: #378ADD; } .b-cm { color: #85B7EB; }
+.b-out { margin-left: 14px; color: var(--text-m); }
+.b-ok { color: #97C459; } .b-info { color: #5DCAA5; }
+.b-cur { display: inline-block; width: 6px; height: 12px; background: #378ADD; animation: blink 1s step-start infinite; vertical-align: -2px; }
+
+/* Future placeholder snapshot */
+.snap-future {
+  height: 100%; padding: 24px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; background: #05070c;
+  font-family: var(--mono);
+}
+.future-ring {
+  width: 80px; height: 80px; border-radius: 50%;
+  border: 1px solid var(--gold-border2);
+  display: flex; align-items: center; justify-content: center;
+  animation: pulse 3s ease-in-out infinite;
+}
+.future-ring svg { width: 32px; height: 32px; color: var(--gold); opacity: 0.6; }
+@keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+.future-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-m); }
+
+/* Product info */
+.prod-info { padding: 1.5rem; }
+.product-card.featured .prod-info { padding: 2rem 2rem 2rem 2.5rem; display: flex; flex-direction: column; justify-content: center; }
+.prod-tag {
+  display: inline-block;
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--gold);
+  padding: 3px 10px; border-radius: 20px;
+  background: var(--gold-glow); border: 1px solid var(--gold-border2);
+  margin-bottom: 0.75rem;
+}
+.prod-name { font-family: var(--disp); font-size: 1.35rem; font-weight: 700; margin-bottom: 0.5rem; }
+.product-card.featured .prod-name { font-size: 1.8rem; }
+.prod-desc { font-size: 0.85rem; color: var(--text-s); line-height: 1.7; margin-bottom: 1rem; }
+.product-card.featured .prod-desc { font-size: 0.95rem; margin-bottom: 1.5rem; }
+.prod-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.25rem; }
+.chip {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.06em;
+  padding: 3px 10px; border-radius: 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-md); color: var(--text-s);
+}
+.prod-link {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--gold);
+  text-decoration: none; transition: gap 0.2s;
+}
+.prod-link:hover { gap: 12px; }
+.prod-link svg { width: 12px; height: 12px; }
+.prod-status {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 10px; color: var(--text-m);
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.prod-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #639922; }
+.prod-status.soon::before { background: var(--gold); animation: pulse 2s ease-in-out infinite; }
+
+/* ══════════════ CONTACT ══════════════ */
+.contact-sec { padding: 120px 0; }
+.contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 6rem; align-items: start; }
+.contact-left { }
+.contact-left .sec-desc { margin-top: 1.5rem; }
+.contact-info { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+.cinfo-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 1rem 1.25rem;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: 0.875rem; color: var(--text-s);
+  transition: border-color 0.2s;
+}
+.cinfo-item:hover { border-color: var(--gold-border2); }
+.cinfo-icon {
+  width: 36px; height: 36px; flex-shrink: 0;
+  background: var(--gold-glow); border: 1px solid var(--gold-border2);
+  border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold);
+}
+.cinfo-icon svg { width: 16px; height: 16px; }
+.cinfo-item a { color: var(--gold); text-decoration: none; }
+.cinfo-item a:hover { text-decoration: underline; }
+
+/* Contact form */
+.contact-form { }
+.cf-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem; }
+.cf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.cf-group label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--text-m);
+}
+.cf-group input,
+.cf-group textarea,
+.cf-group select {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 13px 16px;
+  font-family: var(--sans); font-size: 14px; font-weight: 300;
+  color: var(--text-p); width: 100%;
+  outline: none; transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.cf-group input::placeholder,
+.cf-group textarea::placeholder { color: var(--text-m); }
+.cf-group input:focus,
+.cf-group textarea:focus,
+.cf-group select:focus {
+  border-color: var(--gold-border);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.06);
+}
+.cf-group textarea { resize: vertical; min-height: 130px; line-height: 1.6; }
+.cf-group select option { background: var(--bg-card); color: var(--text-p); }
+.cf-submit {
+  width: 100%; padding: 15px 28px;
+  background: linear-gradient(135deg, var(--gold-lt), var(--gold));
+  color: #05060a;
+  font-family: var(--mono); font-size: 12px; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  border: none; border-radius: var(--r-sm);
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.cf-submit:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.cf-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; filter: none; }
+.cf-success {
+  display: none; text-align: center; padding: 3rem 2rem;
+  background: var(--bg-card); border: 1px solid var(--gold-border2);
+  border-radius: var(--r);
+}
+.cf-success .ck { font-size: 2.5rem; color: var(--gold); margin-bottom: 1rem; }
+.cf-success h3 { font-family: var(--disp); font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+.cf-success p { color: var(--text-s); font-size: 0.9rem; }
+.cf-error { display: none; margin-top: 10px; font-family: var(--mono); font-size: 11px; color: #f09595; text-align: center; }
+
+/* ══════════════ FOOTER ══════════════ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 3rem 0;
+}
+.footer-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1.5rem;
+}
+.footer-copy { font-family: var(--mono); font-size: 11px; color: var(--text-m); }
+.footer-links { display: flex; gap: 2rem; }
+.footer-links a { font-family: var(--mono); font-size: 11px; color: var(--text-m); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--gold); }
+.footer-right { font-family: var(--mono); font-size: 11px; color: var(--text-m); }
+.footer-right span { color: var(--gold); }
+
+/* ══════════════ UTILS ══════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+section { position: relative; z-index: 1; }
+
+@media (max-width: 900px) {
+  .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .about-visual { display: none; }
+  .services-grid { grid-template-columns: 1fr 1fr; }
+  .products-grid { grid-template-columns: 1fr; }
+  .product-card.featured { grid-column: span 1; display: block; }
+  .product-card.featured .prod-visual { height: 200px; }
+  .nav-links { display: none; }
+  .nav-burger { display: flex; }
+  .cf-row { grid-template-columns: 1fr; }
+  .hero-stats { gap: 2rem; }
+}
+@media (max-width: 600px) {
+  .wrap { padding: 0 1.25rem; }
+  .services-grid { grid-template-columns: 1fr; }
+  .footer-inner { flex-direction: column; text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; }
+  .pillars { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" color="#c9a84c">
+          <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/>
+          <polygon points="12 7 17 10 17 14 12 17 7 14 7 10"/>
+        </svg>
+      </div>
+      <span class="logo-text">OB<span>SIDIAN</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+    </ul>
+    <div class="nav-burger" onclick="toggleMenu()" id="burger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#services" onclick="closeMenu()">Services</a>
+  <a href="#products" onclick="closeMenu()">Products</a>
+  <a href="#contact" onclick="closeMenu()">Get in Touch</a>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-bg-orb"></div>
+  <div class="wrap">
+    <p class="hero-eyebrow">Full-spectrum technology company</p>
+    <h1>Precision-built technology<br>for a <em>complex world.</em></h1>
+    <p class="hero-sub">Obsidian engineers systems that matter — spanning security intelligence, property technology, and developer infrastructure. Built in Africa, deployed globally.</p>
+    <div class="hero-actions">
+      <a href="#products" class="btn-primary">
+        Explore Products
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#contact" class="btn-ghost">Work With Us</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-val">3+</span>
+        <span class="stat-label">Products live</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">100%</span>
+        <span class="stat-label">African-built</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">∞</span>
+        <span class="stat-label">Systems thinking</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">NBI</span>
+        <span class="stat-label">Nairobi, Kenya</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-text">
+        <p class="sec-eyebrow">Who we are</p>
+        <h2 class="sec-title">Engineering at the<br><em>edge of possibility</em></h2>
+        <div class="about-body">
+          <p>Obsidian is a Nairobi-based technology company building precision software for security, property, and developer ecosystems. We believe that great technology is never accidental — it is the product of rigorous thinking, clean architecture, and deep domain understanding.</p>
+          <p>Founded by engineers who refused to accept mediocre tooling, we set out to build the systems we wished existed — resilient, intelligent, and crafted to last.</p>
+        </div>
+        <div class="pillars">
+          <div class="pillar">
+            <div class="pillar-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h4>Precision</h4>
+            <p>Every system we ship is exact. No shortcuts, no technical debt by design.</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+            </div>
+            <h4>Intelligence</h4>
+            <p>We embed machine learning and smart automation where it genuinely moves the needle.</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+            </div>
+            <h4>Scale</h4>
+            <p>Architectures designed to grow — from startup to enterprise without re-platforming.</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <h4>Partnership</h4>
+            <p>We work deeply with clients, not just for them. Your problem becomes ours.</p>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="about-orb">
+          <div class="orbit-dot"></div>
+          <div class="orbit-dot"></div>
+          <div class="orbit-dot"></div>
+          <div class="orb-center">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/>
+              <polygon points="12 7 17 10 17 14 12 17 7 14 7 10"/>
+            </svg>
+            <span>OBSIDIAN</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SERVICES ══ -->
+<section class="services-strip" id="services">
+  <div class="wrap">
+    <p class="sec-eyebrow">What we do</p>
+    <h2 class="sec-title">Our <em>capabilities</em></h2>
+    <p class="sec-desc">From security infrastructure to SaaS products to bespoke software, we operate across the full technology stack.</p>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <p class="svc-title">Cybersecurity & Intelligence</p>
+        <p class="svc-desc">Threat detection systems, real-time monitoring infrastructure, and security intelligence platforms for modern enterprises and cloud environments.</p>
+      </div>
+      <div class="service-card">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <p class="svc-title">SaaS Product Development</p>
+        <p class="svc-desc">End-to-end design and engineering of scalable software-as-a-service platforms — from architecture through deployment and iteration.</p>
+      </div>
+      <div class="service-card">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <p class="svc-title">Property Technology</p>
+        <p class="svc-desc">Smart lease management, portfolio analytics, and automated property workflows tailored for the East African real estate market.</p>
+      </div>
+      <div class="service-card">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <p class="svc-title">Developer Tooling</p>
+        <p class="svc-desc">CLI frameworks, deployment pipelines, and automation infrastructure that helps engineering teams ship faster with confidence.</p>
+      </div>
+      <div class="service-card">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <p class="svc-title">Systems Architecture</p>
+        <p class="svc-desc">Strategic infrastructure design for organisations planning to scale — cloud-native, resilient, and built for long-term maintainability.</p>
+      </div>
+      <div class="service-card">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <p class="svc-title">Tech Consulting</p>
+        <p class="svc-desc">Embedded advisory for leadership teams navigating digital transformation, vendor selection, and technology strategy in complex environments.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PRODUCTS ══ -->
+<section class="products" id="products">
+  <div class="wrap">
+    <div class="products-header">
+      <div>
+        <p class="sec-eyebrow">Our products</p>
+        <h2 class="sec-title">Built in-house.<br><em>Deployed everywhere.</em></h2>
+      </div>
+      <p style="color:var(--text-s);font-size:0.9rem;max-width:320px;line-height:1.7;">Each product is born from a real problem — engineered to production grade, then made available to the world.</p>
+    </div>
+    <div class="products-grid">
+
+      <!-- Sentinel X — featured -->
+      <div class="product-card featured">
+        <div class="prod-visual">
+          <div class="snap-s">
+            <div class="s-bar"><div class="s-dot"></div><span>sentinel-x › threat_monitor --live --verbose</span></div>
+            <div class="s-row s-red"><span>●</span> CRITICAL — Brute force attempt on SSH · 192.168.1.44</div>
+            <div class="s-row s-red"><span>●</span> CRITICAL — SQL injection pattern · /api/query</div>
+            <div class="s-row s-amb"><span>◆</span> WARNING — Privilege escalation attempt detected</div>
+            <div class="s-row s-grn"><span>✓</span> NOMINAL — Firewall rules active and healthy</div>
+            <div class="s-stats">
+              <div class="s-stat"><span class="v">247</span><span class="l">Events/s</span></div>
+              <div class="s-stat"><span class="v">3</span><span class="l">Threats</span></div>
+              <div class="s-stat"><span class="v">99.8%</span><span class="l">Uptime</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-tag">Security Intelligence</span>
+          <h3 class="prod-name">Sentinel X</h3>
+          <p class="prod-desc">Real-time threat detection and security intelligence platform. Monitors live event streams, detects anomalies via ML-based behavioural analysis, and triggers automated incident response workflows at scale.</p>
+          <div class="prod-chips">
+            <span class="chip">Real-time monitoring</span>
+            <span class="chip">ML anomaly detection</span>
+            <span class="chip">Auto-response</span>
+            <span class="chip">Cloud & on-prem</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+            <a href="#contact" class="prod-link">
+              Request access
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="prod-status">Live</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SmartLease -->
+      <div class="product-card">
+        <div class="prod-visual">
+          <div class="snap-sl">
+            <div class="sl-top">
+              <span class="sl-brand">SmartLease</span>
+              <div class="sl-nav2"><span class="a">Dashboard</span><span>Listings</span><span>Analytics</span></div>
+            </div>
+            <div class="sl-metrics">
+              <div class="sl-m"><div class="mv">148</div><div class="ml">Active Leases</div></div>
+              <div class="sl-m"><div class="mv">KSh 4.2M</div><div class="ml">Monthly Rev</div></div>
+              <div class="sl-m"><div class="mv">94%</div><div class="ml">Occupancy</div></div>
+            </div>
+            <div class="sl-item"><span>Westlands, Unit 4B — 2BR</span><span class="sl-b">Active</span></div>
+            <div class="sl-item"><span>Kilimani, Unit 12A — 1BR</span><span class="sl-b">Renewing</span></div>
+            <div class="sl-item"><span>Karen, Unit 7 — 3BR</span><span class="sl-b">Pending</span></div>
+          </div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-tag">PropTech · SaaS</span>
+          <h3 class="prod-name">SmartLease</h3>
+          <p class="prod-desc">Intelligent property management platform for East African real estate. Automates lease lifecycle, rent collection, and portfolio analytics in one place.</p>
+          <div class="prod-chips">
+            <span class="chip">Lease management</span>
+            <span class="chip">Rent automation</span>
+            <span class="chip">Analytics</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+            <a href="#contact" class="prod-link">
+              Learn more
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="prod-status">Live</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BASH -->
+      <div class="product-card">
+        <div class="prod-visual">
+          <div class="snap-b">
+            <div class="b-hdr">
+              <div class="b-dot2 r"></div><div class="b-dot2 y"></div><div class="b-dot2 g"></div>
+              <span class="b-t">bash — cloud deploy terminal</span>
+            </div>
+            <div class="b-ln"><span class="b-pr">$</span><span class="b-cm">bash --init --env production</span></div>
+            <div class="b-ln"><span class="b-out b-info">▸ Initializing BASH runtime v2.4.1</span></div>
+            <div class="b-ln"><span class="b-out b-ok">✓ 14 modules loaded</span></div>
+            <div class="b-ln"><span class="b-pr">$</span><span class="b-cm">bash deploy --target cloud --replicas 3</span></div>
+            <div class="b-ln"><span class="b-out b-info">▸ Building containers... 0.8s</span></div>
+            <div class="b-ln"><span class="b-out b-ok">✓ Deployed to 3 replicas in 1.2s</span></div>
+            <div class="b-ln"><span class="b-pr">$</span><span class="b-cur"></span></div>
+          </div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-tag">DevOps · CLI</span>
+          <h3 class="prod-name">BASH</h3>
+          <p class="prod-desc">Developer-first automation framework and CLI toolchain for cloud-native deployments. Composable pipelines, secret management, and one-command multi-replica deploys.</p>
+          <div class="prod-chips">
+            <span class="chip">Cloud-agnostic</span>
+            <span class="chip">Pipeline builder</span>
+            <span class="chip">Plugin architecture</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+            <a href="#contact" class="prod-link">
+              Learn more
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="prod-status">Live</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coming Soon -->
+      <div class="product-card">
+        <div class="prod-visual">
+          <div class="snap-future">
+            <div class="future-ring">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <span class="future-label">Classified · In development</span>
+          </div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-tag">Coming Soon</span>
+          <h3 class="prod-name">Project [Redacted]</h3>
+          <p class="prod-desc">Something new is being built at Obsidian. We're not ready to talk about it yet — but it's going to be worth the wait.</p>
+          <div class="prod-chips">
+            <span class="chip">2025</span>
+            <span class="chip">Stay tuned</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+            <a href="#contact" class="prod-link">
+              Get notified
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="prod-status soon">In development</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section class="contact-sec" id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div class="contact-left">
+        <p class="sec-eyebrow">Get in touch</p>
+        <h2 class="sec-title">Let's build<br><em>something great.</em></h2>
+        <p class="sec-desc" style="margin-top:1.5rem;">Whether you're looking to partner, license a product, engage us for a project, or just explore possibilities — we want to hear from you.</p>
+        <div class="contact-info">
+          <div class="cinfo-item">
+            <div class="cinfo-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <span>Email us at <a href="mailto:njaudean90@gmail.com">njaudean90@gmail.com</a></span>
+          </div>
+          <div class="cinfo-item">
+            <div class="cinfo-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <span>Nairobi, Kenya — East Africa</span>
+          </div>
+          <div class="cinfo-item">
+            <div class="cinfo-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <span>Response within 24 hours</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form">
+        <div class="cf-success" id="cf-success">
+          <div class="ck">✓</div>
+          <h3>Message received.</h3>
+          <p>We'll be in touch within 24 hours at the email you provided.</p>
+        </div>
+        <div id="cf-wrap">
+          <div class="cf-row">
+            <div class="cf-group">
+              <label for="cf-name">Full Name</label>
+              <input type="text" id="cf-name" name="name" placeholder="Your name" required>
+            </div>
+            <div class="cf-group">
+              <label for="cf-email">Email</label>
+              <input type="email" id="cf-email" name="email" placeholder="you@company.com" required>
+            </div>
+          </div>
+          <div class="cf-group">
+            <label for="cf-company">Company / Organisation</label>
+            <input type="text" id="cf-company" name="company" placeholder="Optional">
+          </div>
+          <div class="cf-group">
+            <label for="cf-interest">Area of interest</label>
+            <select id="cf-interest" name="interest">
+              <option value="" disabled selected>Select one...</option>
+              <option>Sentinel X — Security Platform</option>
+              <option>SmartLease — Property Tech</option>
+              <option>BASH — Developer Tooling</option>
+              <option>Custom software development</option>
+              <option>Tech consulting & advisory</option>
+              <option>Partnership or investment</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="cf-group">
+            <label for="cf-msg">Message</label>
+            <textarea id="cf-msg" name="message" placeholder="Tell us about your project, challenge, or how we can help..." required></textarea>
+          </div>
+          <button type="button" class="cf-submit" id="cf-btn" onclick="submitForm()">
+            <span id="cf-btn-text">Send Message</span>
+            <svg id="cf-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <svg id="cf-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;display:none;animation:spin 1s linear infinite;"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>
+          </button>
+          <p class="cf-error" id="cf-error"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <span class="footer-copy">© 2025 Obsidian Technologies Ltd. All rights reserved.</span>
+      <div class="footer-links">
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#products">Products</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <span class="footer-right">Built in <span>Nairobi, Kenya ◆</span></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── NAV ── */
+function toggleMenu() {
+  const m = document.getElementById('mobile-menu');
+  m.classList.toggle('open');
+}
+function closeMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+}
+
+/* ── SCROLL NAV HIGHLIGHT ── */
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  nav.style.background = window.scrollY > 40
+    ? 'rgba(5,6,10,0.96)'
+    : 'rgba(5,6,10,0.88)';
+});
+
+/* ── CONTACT FORM ── */
+async function submitForm() {
+  const name    = document.getElementById('cf-name').value.trim();
+  const email   = document.getElementById('cf-email').value.trim();
+  const message = document.getElementById('cf-msg').value.trim();
+  const errEl   = document.getElementById('cf-error');
+  errEl.style.display = 'none';
+
+  if (!name || !email || !message) {
+    errEl.textContent = 'Please fill in your name, email, and message.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const btn  = document.getElementById('cf-btn');
+  const txt  = document.getElementById('cf-btn-text');
+  const arr  = document.getElementById('cf-arrow');
+  const spin = document.getElementById('cf-spin');
+
+  btn.disabled = true;
+  txt.textContent = 'Sending...';
+  arr.style.display = 'none';
+  spin.style.display = 'inline';
+
+  try {
+    const res = await fetch('https://formspree.io/f/xnnvjrog', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        name,
+        email,
+        company:  document.getElementById('cf-company').value,
+        interest: document.getElementById('cf-interest').value,
+        message,
+        _replyto: email,
+        _subject: `Obsidian enquiry from ${name}`
+      })
+    });
+
+    if (res.ok) {
+      document.getElementById('cf-wrap').style.display = 'none';
+      document.getElementById('cf-success').style.display = 'block';
+    } else { throw new Error(); }
+  } catch {
+    errEl.textContent = 'Something went wrong. Please email njaudean90@gmail.com directly.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    txt.textContent = 'Send Message';
+    arr.style.display = 'inline';
+    spin.style.display = 'none';
+  }
+}
+</script>
+</body>
+</html>
