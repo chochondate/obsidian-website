@@ -4,10 +4,134 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Obsidian — Precision-built technology for a complex world</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2305060a'/><polygon points='16,4 28,11 28,21 16,28 4,21 4,11' fill='none' stroke='%23c9a84c' stroke-width='2'/><polygon points='16,10 22,14 22,18 16,22 10,18 10,14' fill='%23c9a84c' opacity='0.4'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
+/* ── SPLASH SCREEN ── */
+#splash {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #05060a;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 0;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+  overflow: hidden;
+}
+#splash.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.sp-glow {
+  position: absolute;
+  width: 700px; height: 350px;
+  background: radial-gradient(ellipse, rgba(201,168,76,0.06) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -55%);
+  pointer-events: none;
+  animation: spGlowPulse 2.5s ease-in-out infinite;
+}
+@keyframes spGlowPulse {
+  0%,100% { opacity: 0.5; transform: translate(-50%,-55%) scale(1); }
+  50%      { opacity: 1;   transform: translate(-50%,-55%) scale(1.1); }
+}
+
+.sp-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.025) 1px, transparent 1px);
+  background-size: 72px 72px;
+  pointer-events: none;
+}
+
+/* decorative corner lines */
+.sp-corner {
+  position: absolute;
+  width: 40px; height: 40px;
+  pointer-events: none;
+}
+.sp-corner.tl { top: 32px; left: 32px; border-top: 1px solid rgba(201,168,76,0.2); border-left: 1px solid rgba(201,168,76,0.2); }
+.sp-corner.tr { top: 32px; right: 32px; border-top: 1px solid rgba(201,168,76,0.2); border-right: 1px solid rgba(201,168,76,0.2); }
+.sp-corner.bl { bottom: 32px; left: 32px; border-bottom: 1px solid rgba(201,168,76,0.2); border-left: 1px solid rgba(201,168,76,0.2); }
+.sp-corner.br { bottom: 32px; right: 32px; border-bottom: 1px solid rgba(201,168,76,0.2); border-right: 1px solid rgba(201,168,76,0.2); }
+
+.sp-content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 40px;
+  animation: spFadeUp 0.65s ease forwards;
+}
+@keyframes spFadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.sp-wordmark {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.6rem, 7vw, 5rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #e4e9f2;
+  line-height: 1;
+}
+.sp-wordmark span { color: #c9a84c; }
+
+.sp-tagline {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #3a4560;
+  margin-top: -28px;
+  text-align: center;
+}
+
+/* horizontal scan line bar */
+.sp-bar-track {
+  width: 300px; height: 2px;
+  background: rgba(201,168,76,0.06);
+  border-radius: 2px; overflow: hidden;
+  position: relative;
+}
+.sp-bar-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, transparent 0%, #9a7a2e 20%, #c9a84c 50%, #e8c97a 60%, #c9a84c 75%, transparent 100%);
+  border-radius: 2px;
+  animation: spBarSwipe 2.3s cubic-bezier(0.4,0,0.2,1) forwards;
+  position: relative;
+}
+.sp-bar-fill::after {
+  content: '';
+  position: absolute; right: 0; top: -5px;
+  width: 30px; height: 12px;
+  background: radial-gradient(ellipse, rgba(201,168,76,0.85) 0%, transparent 70%);
+  pointer-events: none;
+}
+@keyframes spBarSwipe {
+  0%   { width: 0%; }
+  20%  { width: 18%; }
+  55%  { width: 65%; }
+  85%  { width: 90%; }
+  100% { width: 100%; }
+}
+
+.sp-status {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 0.15em;
+  color: #c9a84c; opacity: 0.4;
+  margin-top: -22px;
+  display: flex; align-items: center; gap: 8px;
+}
+.sp-status::before {
+  content: '';
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #c9a84c;
+  animation: spDotBlink 0.8s step-start infinite;
+}
+@keyframes spDotBlink {
+  0%,100% { opacity: 1; } 50% { opacity: 0; }
+}
+  60%  { width: 72%; }
+  100% { width: 100%; }
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -622,23 +746,40 @@ section { position: relative; z-index: 1; }
 </head>
 <body>
 
+<!-- ══ SPLASH ══ -->
+<div id="splash">
+  <div class="sp-glow"></div>
+  <div class="sp-grid"></div>
+  <div class="sp-corner tl"></div>
+  <div class="sp-corner tr"></div>
+  <div class="sp-corner bl"></div>
+  <div class="sp-corner br"></div>
+  <div class="sp-content">
+    <div>
+      <div class="sp-wordmark">OB<span>SIDIAN</span></div>
+      <div class="sp-tagline">Precision-built technology</div>
+    </div>
+    <div class="sp-bar-track">
+      <div class="sp-bar-fill"></div>
+    </div>
+    <div class="sp-status" id="sp-status">Initializing</div>
+  </div>
+</div>
+
 <!-- ══ NAV ══ -->
 <nav>
   <div class="nav-inner">
     <a href="#" class="nav-logo">
       <div class="logo-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" color="#c9a84c">
-          <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/>
-          <polygon points="12 7 17 10 17 14 12 17 7 14 7 10"/>
-        </svg>
+        <svg style="display:inline-block;flex-shrink:0;color:#c9a84c;" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/></svg>
       </div>
       <span class="logo-text">OB<span>SIDIAN</span></span>
     </a>
     <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#products">Products</a></li>
-      <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+      <li><a href="#about"><svg style="display:inline-block;flex-shrink:0;vertical-align:-1px;margin-right:5px;" width="12" height="12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>About</a></li>
+      <li><a href="#services"><svg style="display:inline-block;flex-shrink:0;vertical-align:-1px;margin-right:5px;" width="12" height="12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>Services</a></li>
+      <li><a href="#products"><svg style="display:inline-block;flex-shrink:0;vertical-align:-1px;margin-right:5px;" width="12" height="12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>Products</a></li>
+      <li><a href="#contact" class="nav-cta"><svg style="display:inline-block;flex-shrink:0;vertical-align:-1px;margin-right:5px;" width="12" height="12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Get in Touch</a></li>
     </ul>
     <div class="nav-burger" onclick="toggleMenu()" id="burger">
       <span></span><span></span><span></span>
@@ -661,10 +802,14 @@ section { position: relative; z-index: 1; }
     <p class="hero-sub">Obsidian engineers systems that matter — spanning security intelligence, property technology, and developer infrastructure. Built in Africa, deployed globally.</p>
     <div class="hero-actions">
       <a href="#products" class="btn-primary">
+        <svg style="display:inline-block;flex-shrink:0;" width="14" height="14" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
         Explore Products
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <svg style="display:inline-block;flex-shrink:0;" width="14" height="14" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
-      <a href="#contact" class="btn-ghost">Work With Us</a>
+      <a href="#contact" class="btn-ghost">
+        <svg style="display:inline-block;flex-shrink:0;" width="14" height="14" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 00-7.65 0l-.77.78-.77-.78a5.4 5.4 0 00-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg>
+        Work With Us
+      </a>
     </div>
     <div class="hero-stats">
       <div class="stat-item">
@@ -700,30 +845,22 @@ section { position: relative; z-index: 1; }
         </div>
         <div class="pillars">
           <div class="pillar">
-            <div class="pillar-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            </div>
+            <div class="pillar-icon"><svg style="display:inline-block;flex-shrink:0;" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg></div>
             <h4>Precision</h4>
             <p>Every system we ship is exact. No shortcuts, no technical debt by design.</p>
           </div>
           <div class="pillar">
-            <div class="pillar-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-            </div>
+            <div class="pillar-icon"><svg style="display:inline-block;flex-shrink:0;" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg></div>
             <h4>Intelligence</h4>
             <p>We embed machine learning and smart automation where it genuinely moves the needle.</p>
           </div>
           <div class="pillar">
-            <div class="pillar-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
-            </div>
+            <div class="pillar-icon"><svg style="display:inline-block;flex-shrink:0;" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
             <h4>Scale</h4>
             <p>Architectures designed to grow — from startup to enterprise without re-platforming.</p>
           </div>
           <div class="pillar">
-            <div class="pillar-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-            </div>
+            <div class="pillar-icon"><svg style="display:inline-block;flex-shrink:0;" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
             <h4>Partnership</h4>
             <p>We work deeply with clients, not just for them. Your problem becomes ours.</p>
           </div>
@@ -755,44 +892,32 @@ section { position: relative; z-index: 1; }
     <p class="sec-desc">From security infrastructure to SaaS products to bespoke software, we operate across the full technology stack.</p>
     <div class="services-grid">
       <div class="service-card">
-        <div class="svc-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
+        <div class="svc-icon"><svg style="display:inline-block;flex-shrink:0;" width="22" height="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
         <p class="svc-title">Cybersecurity & Intelligence</p>
         <p class="svc-desc">Threat detection systems, real-time monitoring infrastructure, and security intelligence platforms for modern enterprises and cloud environments.</p>
       </div>
       <div class="service-card">
-        <div class="svc-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        </div>
+        <div class="svc-icon"><svg style="display:inline-block;flex-shrink:0;" width="22" height="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
         <p class="svc-title">SaaS Product Development</p>
         <p class="svc-desc">End-to-end design and engineering of scalable software-as-a-service platforms — from architecture through deployment and iteration.</p>
       </div>
       <div class="service-card">
-        <div class="svc-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        </div>
+        <div class="svc-icon"><svg style="display:inline-block;flex-shrink:0;" width="22" height="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
         <p class="svc-title">Property Technology</p>
         <p class="svc-desc">Smart lease management, portfolio analytics, and automated property workflows tailored for the East African real estate market.</p>
       </div>
       <div class="service-card">
-        <div class="svc-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        </div>
+        <div class="svc-icon"><svg style="display:inline-block;flex-shrink:0;" width="22" height="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div>
         <p class="svc-title">Developer Tooling</p>
         <p class="svc-desc">CLI frameworks, deployment pipelines, and automation infrastructure that helps engineering teams ship faster with confidence.</p>
       </div>
       <div class="service-card">
-        <div class="svc-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        </div>
+        <div class="svc-icon"><svg style="display:inline-block;flex-shrink:0;" width="22" height="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 01-9 9"/></svg></div>
         <p class="svc-title">Systems Architecture</p>
         <p class="svc-desc">Strategic infrastructure design for organisations planning to scale — cloud-native, resilient, and built for long-term maintainability.</p>
       </div>
       <div class="service-card">
-        <div class="svc-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-        </div>
+        <div class="svc-icon"><svg style="display:inline-block;flex-shrink:0;" width="22" height="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0018 8 6 6 0 006 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 018.91 14"/></svg></div>
         <p class="svc-title">Tech Consulting</p>
         <p class="svc-desc">Embedded advisory for leadership teams navigating digital transformation, vendor selection, and technology strategy in complex environments.</p>
       </div>
@@ -841,7 +966,7 @@ section { position: relative; z-index: 1; }
           <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
             <a href="#contact" class="prod-link">
               Request access
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <svg style="display:inline-block;flex-shrink:0;" width="12" height="12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
             <span class="prod-status">Live</span>
           </div>
@@ -878,7 +1003,7 @@ section { position: relative; z-index: 1; }
           <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
             <a href="#contact" class="prod-link">
               Learn more
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <svg style="display:inline-block;flex-shrink:0;" width="12" height="12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
             <span class="prod-status">Live</span>
           </div>
@@ -914,7 +1039,7 @@ section { position: relative; z-index: 1; }
           <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
             <a href="#contact" class="prod-link">
               Learn more
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <svg style="display:inline-block;flex-shrink:0;" width="12" height="12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
             <span class="prod-status">Live</span>
           </div>
@@ -942,7 +1067,7 @@ section { position: relative; z-index: 1; }
           <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
             <a href="#contact" class="prod-link">
               Get notified
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <svg style="display:inline-block;flex-shrink:0;" width="12" height="12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
             <span class="prod-status soon">In development</span>
           </div>
@@ -963,21 +1088,15 @@ section { position: relative; z-index: 1; }
         <p class="sec-desc" style="margin-top:1.5rem;">Whether you're looking to partner, license a product, engage us for a project, or just explore possibilities — we want to hear from you.</p>
         <div class="contact-info">
           <div class="cinfo-item">
-            <div class="cinfo-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            </div>
+            <div class="cinfo-icon"><svg style="display:inline-block;flex-shrink:0;" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
             <span>Email us at <a href="mailto:njaudean90@gmail.com">njaudean90@gmail.com</a></span>
           </div>
           <div class="cinfo-item">
-            <div class="cinfo-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            </div>
+            <div class="cinfo-icon"><svg style="display:inline-block;flex-shrink:0;" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
             <span>Nairobi, Kenya — East Africa</span>
           </div>
           <div class="cinfo-item">
-            <div class="cinfo-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            </div>
+            <div class="cinfo-icon"><svg style="display:inline-block;flex-shrink:0;" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
             <span>Response within 24 hours</span>
           </div>
         </div>
@@ -1050,6 +1169,24 @@ section { position: relative; z-index: 1; }
 </footer>
 
 <script>
+/* ── SPLASH ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const msgs = ['Initializing', 'Loading modules', 'Configuring', 'Ready'];
+  let mi = 0;
+  const stEl = document.getElementById('sp-status');
+  const msgTimer = setInterval(() => {
+    mi = (mi + 1) % msgs.length;
+    if (stEl) stEl.textContent = msgs[mi];
+  }, 580);
+  /* dismiss after 2.5s */
+  setTimeout(() => {
+    clearInterval(msgTimer);
+    if (stEl) stEl.textContent = 'Ready';
+    const splash = document.getElementById('splash');
+    if (splash) { splash.classList.add('hide'); setTimeout(() => splash.remove(), 750); }
+  }, 2500);
+});
+
 /* ── NAV ── */
 function toggleMenu() {
   const m = document.getElementById('mobile-menu');
